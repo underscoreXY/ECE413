@@ -53,112 +53,101 @@
     </footer>
 
     <script>
-        // Utility function to generate random values within a range
-        function getRandomValue(min, max) {
-            return Math.random() * (max - min) + min;
+        const deviceId = new URLSearchParams(window.location.search).get('deviceId');
+        if (!deviceId) {
+            alert("Device not specified. Redirecting...");
+            window.location.href = "/devices.html";
         }
 
-        // Labels for daily time slots
-        const timesOfDay = ['6 AM', '9 AM', '12 PM', '3 PM', '6 PM', '9 PM'];
-        const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        let dailyHeartRateChart, dailyOxygenChart, weeklyHeartRateChart;
 
-        // Generate static weekly heart rate data (75–78 BPM)
-        const weeklyHeartRateData = weekDays.map(() => getRandomValue(75, 78).toFixed(1));
+        // Fetch and render weekly heart rate chart
+        async function renderWeeklyChart() {
+            try {
+                const response = await fetch(`/devices/weeklySummary/${deviceId}`, {
+                    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch weekly data.');
+                const weeklyData = await response.json();
 
-        // Global chart instances
-        let dailyHeartRateChart;
-        let dailyOxygenChart;
-        let weeklyHeartRateChart;
+                // Destroy existing chart if it exists
+                if (weeklyHeartRateChart) weeklyHeartRateChart.destroy();
 
-        // Function to generate random daily data
-        function generateDailyData() {
-            const heartRateData = timesOfDay.map(() => getRandomValue(75, 79).toFixed(1));
-            const oxygenData = timesOfDay.map(() => getRandomValue(95, 98).toFixed(1));
-            return { heartRateData, oxygenData };
+                weeklyHeartRateChart = new Chart(document.getElementById('weeklyHeartRateChart'), {
+                    type: 'line',
+                    data: {
+                        labels: weeklyData.labels, // Days of the week
+                        datasets: [{
+                            label: 'Average Heart Rate (BPM)',
+                            data: weeklyData.values, // Heart rate values
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: { display: true, text: 'Weekly Heart Rate' }
+                        },
+                        scales: { y: { suggestedMin: 70, suggestedMax: 150 } }
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+                alert("Failed to load weekly data.");
+            }
         }
 
-        // Function to render weekly heart rate chart
-        function renderWeeklyChart() {
-            weeklyHeartRateChart = new Chart(document.getElementById('weeklyHeartRateChart'), {
-                type: 'line',
-                data: {
-                    labels: weekDays,
-                    datasets: [{
-                        label: 'Average Heart Rate (BPM)',
-                        data: weeklyHeartRateData,
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderWidth: 2,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: 'Weekly Heart Rate' }
-                    },
-                    scales: {
-                        y: { suggestedMin: 70, suggestedMax: 80 }
-                    }
-                }
-            });
-        }
+        // Fetch and render daily charts
+        async function updateDailyCharts(date) {
+            try {
+                const response = await fetch(`/devices/dailyData/${deviceId}?date=${date}`, {
+                    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch daily data.');
+                const dailyData = await response.json();
 
-        // Function to update daily charts with new data
-        function updateDailyCharts(date) {
-            const { heartRateData, oxygenData } = generateDailyData();
-
-            // Update Daily Heart Rate Chart
-            if (dailyHeartRateChart) dailyHeartRateChart.destroy();
-            dailyHeartRateChart = new Chart(document.getElementById('dailyHeartRateChart'), {
-                type: 'line',
-                data: {
-                    labels: timesOfDay,
-                    datasets: [{
-                        label: `Heart Rate (BPM) - ${date}`,
-                        data: heartRateData,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderWidth: 2,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: 'Daily Heart Rate' }
+                // Update Daily Heart Rate Chart
+                if (dailyHeartRateChart) dailyHeartRateChart.destroy();
+                dailyHeartRateChart = new Chart(document.getElementById('dailyHeartRateChart'), {
+                    type: 'line',
+                    data: {
+                        labels: dailyData.labels, // Time of day slots
+                        datasets: [{
+                            label: `Heart Rate (BPM) - ${date}`,
+                            data: dailyData.heartRateValues, // Heart rate values
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        }]
                     },
-                    scales: {
-                        y: { suggestedMin: 70, suggestedMax: 80 }
-                    }
-                }
-            });
+                    options: { responsive: true }
+                });
 
-            // Update Daily Oxygen Saturation Chart
-            if (dailyOxygenChart) dailyOxygenChart.destroy();
-            dailyOxygenChart = new Chart(document.getElementById('dailyOxygenChart'), {
-                type: 'line',
-                data: {
-                    labels: timesOfDay,
-                    datasets: [{
-                        label: `Oxygen Saturation (%) - ${date}`,
-                        data: oxygenData,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 2,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: 'Daily Oxygen Saturation' }
+                // Update Daily Oxygen Saturation Chart
+                if (dailyOxygenChart) dailyOxygenChart.destroy();
+                dailyOxygenChart = new Chart(document.getElementById('dailyOxygenChart'), {
+                    type: 'line',
+                    data: {
+                        labels: dailyData.labels, // Time of day slots
+                        datasets: [{
+                            label: `Oxygen Saturation (%) - ${date}`,
+                            data: dailyData.oxygenValues, // Oxygen saturation values
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.4
+                        }]
                     },
-                    scales: {
-                        y: { suggestedMin: 90, suggestedMax: 100 }
-                    }
-                }
-            });
+                    options: { responsive: true }
+                });
+            } catch (err) {
+                console.error(err);
+                alert("Failed to load daily data.");
+            }
         }
 
         // Event listener for the Load Data button
@@ -171,7 +160,7 @@
             updateDailyCharts(dateInput);
         });
 
-        // Render the initial weekly chart on page load
+        // Render weekly chart on page load
         renderWeeklyChart();
     </script>
 </body>
