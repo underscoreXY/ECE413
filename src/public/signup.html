@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <!-- Redirect button that appears after signup -->
+    <div id="redirectContainer" style="display: none; margin-top: 20px;">
+        <p>Registration successful! Click the button below to proceed to the login page.</p>
+        <button id="goToLogin">Go to Login</button>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Registration failed.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Registration successful!');
+
+                // Display the redirect container
+                document.getElementById('redirectContainer').style.display = 'block';
+
+                // Add event listener to the "Go to Login" button
+                document.getElementById('goToLogin').addEventListener('click', function () {
+                    window.location.href = '/login.html';
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error during registration. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>

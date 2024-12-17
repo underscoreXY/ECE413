@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#deviceList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#deviceList li {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#deviceList button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#deviceList button:hover {
+    background-color: #e60000;
+}
+
+#addDeviceForm {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#addDeviceForm input {
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+#addDeviceForm button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#addDeviceForm button:hover {
+    background-color: #45a049;
+}
+
+#btnLogout, #btnHome {
+    margin: 10px 5px;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#btnLogout:hover, #btnHome:hover {
+    background-color: #0056b3;
+}

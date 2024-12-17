@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Track - Settings</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="references.html">References</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Settings</h1>
+        <form>
+            <label for="timeRange">Measurement Time Range:</label>
+            <input type="text" id="timeRange" name="timeRange">
+            <label for="frequency">Measurement Frequency (mins):</label>
+            <input type="number" id="frequency" name="frequency" min="1">
+            <button type="submit">Save</button>
+        </form>
+    </main>
+    <footer>
+        <p>© 2024 Heart Track Project</p>
+    </footer>
+	<script src="javascripts/script.js"></script>
+	<script src="javascripts/settings.js"></script>
+</body>
+</html>
