@@ -144,8 +144,8 @@ The application will be accessible at `http://localhost:3000/`.
 
 Use the following credentials to log in with an existing user account that has recently collected data:
 
-- **Email**: `test@gmail.com`
-- **Password**: `ECE123`
+- **Email**: `test1@gmail.com`
+- **Password**: `ece1234`
 
 ---
 
