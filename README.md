@@ -134,8 +134,8 @@ The application will be accessible at `http://localhost:3000/`.
 
 ## **Links**
 
-- **Server**: [http://localhost:3000/](http://localhost:3000/)
-- **Pitch Video**: [https://example.com/pitch-video](https://example.com/pitch-video)
+- **Server**: [http://ec2-3-135-193-215.us-east-2.compute.amazonaws.com:3000)
+- **Pitch Video**: [https://youtu.be/jK8Rz4r2I3M)
 - **Demonstration Video**: [https://example.com/demo-video](https://example.com/demo-video)
 
 ---
@@ -144,8 +144,8 @@ The application will be accessible at `http://localhost:3000/`.
 
 Use the following credentials to log in with an existing user account that has recently collected data:
 
-- **Email**: `testuser@example.com`
-- **Password**: `password123`
+- **Email**: `test@gmail.com`
+- **Password**: `ECE123`
 
 ---
 
