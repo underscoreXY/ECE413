@@ -136,7 +136,7 @@ The application will be accessible at `http://localhost:3000/`.
 
 - **Server**: [http://ec2-3-135-193-215.us-east-2.compute.amazonaws.com:3000)
 - **Pitch Video**: [https://youtu.be/jK8Rz4r2I3M)
-- **Demonstration Video**: [https://example.com/demo-video](https://example.com/demo-video)
+- **Demonstration Video**: [https://youtu.be/OW4TIsSfhu4)
 
 ---
 
